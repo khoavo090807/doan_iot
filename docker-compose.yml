@@ -1,0 +1,59 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1883:1883"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_sub -h 127.0.0.1 -t '$$SYS/broker/uptime' -C 1 -W 3 >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  node-red:
+    image: nodered/node-red:latest
+    restart: unless-stopped
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:1880:1880"
+    volumes:
+      - node_red_data:/data
+      - ./middleware:/opt/inventory:ro
+      - ./web/dist:/data/web:ro
+    command: ["--settings", "/opt/inventory/settings.js"]
+    environment:
+      FLOWS: /opt/inventory/flows.json
+      TZ: Asia/Ho_Chi_Minh
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:1880/api/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8123:8123"
+    volumes:
+      - home_assistant_config:/config
+      - ./homeassistant/configuration.yaml:/config/configuration.yaml:ro
+      - ./homeassistant/dashboards:/config/dashboards:ro
+    environment:
+      TZ: Asia/Ho_Chi_Minh
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:
+  node_red_data:
+  home_assistant_config:

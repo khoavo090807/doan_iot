@@ -1,0 +1,38 @@
+title: Kệ hàng
+views:
+  - title: Tổng quan
+    path: inventory
+    icon: mdi:warehouse
+    cards:
+      - type: markdown
+        content: |
+          # Kệ linh kiện M3
+          Theo dõi tồn kho và tình trạng kết nối của khay.
+      - type: gauge
+        entity: sensor.inventory_tray_demo_stock_percent
+        name: Mức tồn kho
+        min: 0
+        max: 100
+        severity:
+          green: 40
+          yellow: 15
+          red: 0
+      - type: entities
+        title: Trạng thái khay
+        show_header_toggle: false
+        entities:
+          - entity: sensor.inventory_tray_demo_quantity
+          - entity: sensor.inventory_tray_demo_net_weight
+          - entity: sensor.inventory_tray_demo_config_ack
+          - entity: sensor.inventory_tray_demo_led_state
+          - entity: sensor.inventory_tray_demo_restock_status
+          - entity: sensor.inventory_tray_demo_restock_quantity
+          - entity: binary_sensor.inventory_tray_demo_online
+          - entity: binary_sensor.inventory_tray_demo_low_stock
+          - entity: binary_sensor.inventory_tray_demo_sensor_problem
+      - type: history-graph
+        title: Lịch sử tồn kho
+        hours_to_show: 24
+        entities:
+          - entity: sensor.inventory_tray_demo_stock_percent
+          - entity: sensor.inventory_tray_demo_quantity

@@ -1,0 +1,87 @@
+default_config:
+
+mqtt:
+  sensor:
+    - name: "Kệ M3 - Tồn kho"
+      unique_id: inventory_tray_demo_stock_percent
+      default_entity_id: sensor.inventory_tray_demo_stock_percent
+      state_topic: "inventory/tray-demo/state"
+      value_template: "{{ value_json.stockPercent | round(1) }}"
+      unit_of_measurement: "%"
+      icon: mdi:package-variant
+    - name: "Kệ M3 - Số lượng ước tính"
+      unique_id: inventory_tray_demo_quantity
+      default_entity_id: sensor.inventory_tray_demo_quantity
+      state_topic: "inventory/tray-demo/state"
+      value_template: "{{ value_json.quantity }}"
+      unit_of_measurement: "chiếc"
+      icon: mdi:counter
+    - name: "Kệ M3 - Khối lượng tịnh"
+      unique_id: inventory_tray_demo_net_weight
+      default_entity_id: sensor.inventory_tray_demo_net_weight
+      state_topic: "inventory/tray-demo/state"
+      value_template: "{{ value_json.netWeightGrams | round(1) }}"
+      unit_of_measurement: "g"
+      icon: mdi:weight-gram
+    - name: "Kệ M3 - Trạng thái cấu hình"
+      unique_id: inventory_tray_demo_config_ack
+      default_entity_id: sensor.inventory_tray_demo_config_ack
+      state_topic: "inventory/tray-demo/state"
+      value_template: >-
+        {{ 'Đã áp dụng v' ~ value_json.lastConfigAck.configVersion
+           if value_json.lastConfigAck and value_json.lastConfigAck.applied
+           else 'Chưa có xác nhận' }}
+      icon: mdi:check-network-outline
+    - name: "Kệ M3 - Đầu ra LED"
+      unique_id: inventory_tray_demo_led_state
+      default_entity_id: sensor.inventory_tray_demo_led_state
+      state_topic: "inventory/tray-demo/state"
+      value_template: "{{ value_json.actuatorLed | default('off') }}"
+      icon: mdi:led-on
+    - name: "Kệ M3 - Trạng thái nhập hàng"
+      unique_id: inventory_tray_demo_restock_status
+      default_entity_id: sensor.inventory_tray_demo_restock_status
+      state_topic: "inventory/tray-demo/restock/state"
+      value_template: "{{ value_json.status | default('chưa có yêu cầu') }}"
+      icon: mdi:clipboard-check-outline
+    - name: "Kệ M3 - Số lượng cần nhập"
+      unique_id: inventory_tray_demo_restock_quantity
+      default_entity_id: sensor.inventory_tray_demo_restock_quantity
+      state_topic: "inventory/tray-demo/restock/state"
+      value_template: "{{ value_json.quantityToOrder | default(0) }}"
+      unit_of_measurement: "chiếc"
+      icon: mdi:package-down
+  binary_sensor:
+    - name: "Kệ M3 - Thiết bị online"
+      unique_id: inventory_tray_demo_online
+      default_entity_id: binary_sensor.inventory_tray_demo_online
+      state_topic: "inventory/tray-demo/state"
+      value_template: "{{ 'ON' if value_json.online else 'OFF' }}"
+      payload_on: "ON"
+      payload_off: "OFF"
+      device_class: connectivity
+    - name: "Kệ M3 - Cần nhập hàng"
+      unique_id: inventory_tray_demo_low_stock
+      default_entity_id: binary_sensor.inventory_tray_demo_low_stock
+      state_topic: "inventory/tray-demo/state"
+      value_template: "{{ 'ON' if value_json.isLowStock else 'OFF' }}"
+      payload_on: "ON"
+      payload_off: "OFF"
+      device_class: problem
+    - name: "Kệ M3 - Cảm biến bất thường"
+      unique_id: inventory_tray_demo_sensor_problem
+      default_entity_id: binary_sensor.inventory_tray_demo_sensor_problem
+      state_topic: "inventory/tray-demo/state"
+      value_template: "{{ 'ON' if value_json.health in ['sensor_error', 'config_error', 'offline'] else 'OFF' }}"
+      payload_on: "ON"
+      payload_off: "OFF"
+      device_class: problem
+
+lovelace:
+  dashboards:
+    inventory-dashboard:
+      mode: yaml
+      title: Quản lý tồn kho
+      icon: mdi:warehouse
+      show_in_sidebar: true
+      filename: dashboards/inventory.yaml
