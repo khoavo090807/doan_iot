@@ -49,16 +49,16 @@
     }
   ],
   "connections": [
-    ["esp:16", "hx711:DT", "green", []],
-    ["esp:17", "hx711:SCK", "blue", []],
-    ["esp:VIN", "hx711:VCC", "red", []],
-    ["esp:GND.1", "hx711:GND", "black", []],
-    ["esp:21", "oled:SDA", "green", []],
-    ["esp:22", "oled:SCL", "blue", []],
-    ["esp:VIN", "oled:VCC", "red", []],
-    ["esp:GND.1", "oled:GND", "black", []],
-    ["esp:25", "red-resistor:1", "green", []],
-    ["red-resistor:2", "red-led:A", "green", []],
-    ["red-led:C", "esp:GND.1", "black", []]
-  ]
+  ["esp:RX2", "hx711:DT", "green", []],
+  ["esp:TX2", "hx711:SCK", "blue", []],
+  ["esp:VIN", "hx711:VCC", "red", []],
+  ["esp:GND.1", "hx711:GND", "black", []],
+  ["esp:D21", "oled:SDA", "green", []],
+  ["esp:D22", "oled:SCL", "blue", []],
+  ["esp:VIN", "oled:VCC", "red", []],
+  ["esp:GND.1", "oled:GND", "black", []],
+  ["esp:D25", "red-resistor:1", "green", []],
+  ["red-resistor:2", "red-led:A", "green", []],
+  ["red-led:C", "esp:GND.1", "black", []]
+]
 }

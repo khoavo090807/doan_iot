@@ -212,3 +212,11 @@ Tên thư mục có thể điều chỉnh theo cách đóng gói cuối cùng; k
 - Danh sách linh kiện/SKU mẫu và khối lượng trung bình mỗi chiếc; phương pháp tare/hiệu chuẩn.
 - Host chạy MQTT, Node-RED, Home Assistant và web app; phương án mạng/Wi-Fi.
 - Ngưỡng hồi phục mặc định (đề xuất 20%), kênh thông báo mong muốn và thời hạn nộp/demo.
+
+cách chạy web:
+cd web
+npm install
+npm run dev
+
+cách chạy wokwi simulator:
+wokwi: simulator start
